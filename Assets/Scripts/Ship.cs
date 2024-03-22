@@ -9,24 +9,24 @@ public class Ship : MonoBehaviour
 	//declare a private field ‘rb2D’ within the Ship class to store this component.
 	private Rigidbody2D rb2d;
 	//defining movement direction
-	//private Vector2 thrustDirection = new Vector2(1, 0);
+	private Vector2 thrustDirection = new Vector2(1, 0);
 	//down
 	//private Vector2 thrustDirection = new Vector2(0, -1);
 	//up
 	//private Vector2 thrustDirection = new Vector2(0, 1);
 	//left
-	private Vector2 thrustDirection = new Vector2(-1, 0);
+	//private Vector2 thrustDirection = new Vector2(-1, 0);
 
 
 	//constant value
-	private float ThrustForce = 2f;
+	private float thrustForce = 2f;
 	//store the radius of the ship's collider
 	private float colliderRadius;
-
-	float colliderHalfWidth, colliderHalfHeight;
+	//rotate speed
+	private const float rotateDegreesPerSecond = 50f;
 
 	// Start is called before the first frame update
-	void Start()
+	void Start()	
 	{
 		//assign this field the Rigidbody 2D component attached to the Ship game object.
 		rb2d = GetComponent<Rigidbody2D>();
@@ -35,10 +35,18 @@ public class Ship : MonoBehaviour
 	}
 
 	//// Update is called once per frame
-	//void Update()
-	//   {
+	void Update()
+	{
+		float rotationInput = Input.GetAxis("Rotate");
+		// calculate rotation amount and apply rotation
+		float rotationAmount = rotateDegreesPerSecond * Time.deltaTime;
+		if (rotationInput < 0)
+		{
+			rotationAmount *= -1;
+		}
+		transform.Rotate(Vector3.forward, rotationAmount);
 
-	//   }
+	}
 	//used to interact with physics
 	private void FixedUpdate()
 	{
@@ -47,7 +55,7 @@ public class Ship : MonoBehaviour
 		if (thrustInput > 0f)
 		{
 			Debug.Log("space pressed");
-			rb2d.AddForce(thrustDirection * ThrustForce, ForceMode2D.Force);
+			rb2d.AddForce(thrustDirection * thrustForce, ForceMode2D.Force);
 
 		}
 
@@ -66,17 +74,17 @@ public class Ship : MonoBehaviour
 		Vector2 position = transform.position;
 		if (position.x + colliderRadius > ScreenUtils.ScreenRight)
 		{
-			position.x = ScreenUtils.ScreenLeft - colliderRadius;
+			position.x = ScreenUtils.ScreenLeft + colliderRadius;
 			transform.position = position;
-			Debug.Log("Exits screen right: " + transform.position);
+			Debug.Log("Entering screen left: " + transform.position);
 
 		}
 		//if ships exits ScreenLeft, ship comes out from ScreenRight
-		if (position.x + colliderRadius < ScreenUtils.ScreenLeft)
+		if (position.x - colliderRadius < ScreenUtils.ScreenLeft)
 		{
 			position.x = ScreenUtils.ScreenRight + colliderRadius;
 			transform.position = position;
-			Debug.Log("Exits screen left: " + transform.position);
+			Debug.Log("Entering screen right: " + transform.position);
 
 		}
 		// if ship exits ScreenTop, ship comes out from ScreenBottom;
@@ -84,7 +92,7 @@ public class Ship : MonoBehaviour
 		{
 			position.y = ScreenUtils.ScreenBottom + colliderRadius;
 			transform.position = position;
-			Debug.Log("Exits screen top: " + transform.position);
+			Debug.Log("Entering screen bottom: " + transform.position);
 
 		}
 		//if ships exits ScreenBottom, ship comes out from ScreenTop
@@ -92,7 +100,7 @@ public class Ship : MonoBehaviour
 		{
 			position.y = ScreenUtils.ScreenTop + colliderRadius;
 			transform.position = position;
-			Debug.Log("Exits screen bottom: " + transform.position);
+			Debug.Log("Entering screen top: " + transform.position);
 
 		}
 	}
