@@ -9,13 +9,7 @@ public class Ship : MonoBehaviour
 	//declare a private field ‘rb2D’ within the Ship class to store this component.
 	private Rigidbody2D rb2d;
 	//defining movement direction
-	private Vector2 thrustDirection = new Vector2(1, 0);
-	//down
-	//private Vector2 thrustDirection = new Vector2(0, -1);
-	//up
-	//private Vector2 thrustDirection = new Vector2(0, 1);
-	//left
-	//private Vector2 thrustDirection = new Vector2(-1, 0);
+	private Vector2 thrustDirection;
 
 
 	//constant value
@@ -45,20 +39,17 @@ public class Ship : MonoBehaviour
 			rotationAmount *= -1;
 		}
 		transform.Rotate(Vector3.forward, rotationAmount);
-
+		//assign thrustDirection as same as rotate direction
+		thrustDirection = CalculateDynamicThrustDirection();
 	}
 	//used to interact with physics
 	private void FixedUpdate()
 	{
 		float thrustInput = Input.GetAxis("Thrust");
-		Debug.Log("Thrust: " + thrustInput);
 		if (thrustInput > 0f)
 		{
-			Debug.Log("space pressed");
 			rb2d.AddForce(thrustDirection * thrustForce, ForceMode2D.Force);
-
 		}
-
 	}
 
 	// Disables the behaviour when the ship is invisible
@@ -103,5 +94,20 @@ public class Ship : MonoBehaviour
 			Debug.Log("Entering screen top: " + transform.position);
 
 		}
+	}
+	Vector2 CalculateDynamicThrustDirection()
+	{
+		// Extract the ship's rotation around the Z axis from eulerAngles.z.
+		float shipRotationZ = transform.eulerAngles.z;
+
+		// Convert the angle from degrees to radians
+		float shipRotationRadians = shipRotationZ * Mathf.Deg2Rad;
+
+		// Determine the new X and Y components of the thrustDirection vector
+		float thrustDirectionX = Mathf.Cos(shipRotationRadians);
+		float thrustDirectionY = Mathf.Sin(shipRotationRadians);
+
+		// Return the calculated thrust direction as a Vector2
+		return new Vector2(thrustDirectionX, thrustDirectionY);
 	}
 }
