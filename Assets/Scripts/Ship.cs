@@ -20,7 +20,7 @@ public class Ship : MonoBehaviour
 	private const float rotateDegreesPerSecond = 50f;
 
 	// Start is called before the first frame update
-	void Start()	
+	void Start()
 	{
 		//assign this field the Rigidbody 2D component attached to the Ship game object.
 		rb2d = GetComponent<Rigidbody2D>();
