@@ -11,4 +11,4 @@
 
 ### Output
 
-<img width="1552" alt="Shio" src="https://github.com/qrran/Ship/tree/main/Ship.output.png">
+<img width="1552" alt="Ship" src="https://github.com/qrran/Ship/blob/main/Ship.output.png">
